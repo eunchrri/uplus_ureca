@@ -9,7 +9,7 @@ public class Solution_programmers_크레인_인형_뽑기_이은채 {
     private static final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
     public static void main(String[] args) throws IOException {
-        Solution solution = new Solution();
+        //Solution solution = new Solution();
 
         String arr = br.readLine();
 
@@ -18,11 +18,11 @@ public class Solution_programmers_크레인_인형_뽑기_이은채 {
                         .filter(c -> !Objects.equals(c, "") & !Objects.equals(c, " "))
                         .mapToInt(Integer::parseInt).toArray();
 
-        bw.write(solution.solution(phoneNumberList) + "");
+        //bw.write(solution.solution(phoneNumberList) + "");
         bw.close();
     }
 
-    static class Solution {
+    /*static class Solution {
         public int solution(int[][] board, int[] moves) {
 			// 1. 배열을 스택에 넣기
 	        Stack<Integer> basket = new Stack<>();
@@ -49,5 +49,5 @@ public class Solution_programmers_크레인_인형_뽑기_이은채 {
 			}
 	        
         }
-    }
+    }*/
 }
