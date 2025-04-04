@@ -62,7 +62,7 @@ class LifeCycleSample extends Component {
   componentWillUnmount() {
     console.log("componentWillUnmount");
   }
-  
+
   handleClick = () => {
     this.setState({
       number: this.state.number + 1,
@@ -107,6 +107,11 @@ class LifeCycleSample extends Component {
           // this.props.missing.value
         }
         <h1 style={style} ref={(ref) => (this.myRef = ref)}>
+          {
+            // this.props.missing.value 는 없기 때문에 에러 발생
+            // => 의도적으로 error 발생시키기
+            // console.log(this.props.missing.value)
+          }
           {this.state.number}
         </h1>
         <p>color: {this.state.color}</p>
