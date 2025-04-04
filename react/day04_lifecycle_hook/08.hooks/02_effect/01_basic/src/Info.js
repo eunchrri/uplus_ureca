@@ -11,12 +11,12 @@ const Info = () => {
    * 
    * componentDidMount + componentDidUpdate
    * 비동기 통신을 통해 서버에서 데이타를 가져올때 componentDidMount()에서 사용한다. 
-     - 처음 렌더링이 끝난 후에 실행되므로 UI가 깜빡이는 현상을 줄일 수 있다. 
-     - 만약 constructor나 render()에서 데이터를 요청하면, 
-     데이터가 로드될 때마다 setState()가 호출되어 불필요한 렌더링이 발생할 수 있음.
+    - 처음 렌더링이 끝난 후에 실행되므로 UI가 깜빡이는 현상을 줄일 수 있다. 
+    - 만약 constructor나 render()에서 데이터를 요청하면, 
+    데이터가 로드될 때마다 setState()가 호출되어 불필요한 렌더링이 발생할 수 있음.
 
    * useEffect(callback)     : 리액트 컴포넌트가 렌더링될 때마다 수행되는 hooks
-   * useEffect(callback, []) : 맨 처림 렌더링 될 때만 수행하도록 설정
+   * useEffect(callback, []) : 맨 처음 렌더링 될 때만 수행하도록 설정
    * useEffect(callback, [state, props]) : 해당 state가 변경될 때마다 렌더링된다.
    */
   useEffect(
@@ -32,7 +32,7 @@ const Info = () => {
         console.log(name);
       };
     },
-    [name],
+    [name]
   );
   const onChangeName = (e) => {
     setName(e.target.value);
