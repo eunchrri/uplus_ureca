@@ -13,3 +13,32 @@
 
 @include 이름($인자명:값);    //인자가 여러개 일때 인자는 이름 기반으로 인자 전달
 */
+
+@mixin theme($theme: Darkgray) {
+  background-color: $theme;
+  box-shadow: 5px 5px 1px rgba($theme, 0.25);
+  color: white;
+}
+
+@mixin box {
+  height: 50px;
+  width: 100px;
+  margin: 10px auto;
+  padding: 5px;
+}
+
+.info {
+  @include theme; // 인자 x: default로 darkgray
+  @include box;
+  color: #000;
+}
+
+.alert {
+  @include theme(darkred);
+  @include box;
+}
+
+.success {
+  @include theme($theme: darkgreen);
+  @include box;
+}
