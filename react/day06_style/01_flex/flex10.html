@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-        .container{
-            display: flex;
-            width: 500px;
-            background: gray;
-            flex-flow: row wrap;
-            height: 100px;
-            justify-content: space-evenly;
-            align-items: flex-start;
-        }
-        .item{
-           flex-basis: auto;  
-        }
+      .container {
+        display: flex;
+        width: 500px;
+        background: gray;
+        flex-flow: row wrap;
+        height: 100px;
+        justify-content: space-evenly;
+        align-items: flex-start;
+      }
+      .item {
+        flex-basis: auto;
+      }
 
-
-        /* 
+      /* 
         flex-grow 숫자를  item별로 다르게 지정하면 
         남는 공간을 비율별로 grow한다. 
 
@@ -38,35 +37,40 @@
         (500 -330)/3 * 2
         (500 -330)/3 * 1
         */
-        .item:nth-child(1) { flex-grow: 0; }
-        .item:nth-child(2) { flex-grow: 2; }
-        .item:nth-child(3) { flex-grow: 0; }
-        div {
-            width: 100px;
-            /* height: 100px; */
-        }
-        .hello{
-            background: green;
-            /* height: 50px; */
-        }
-        .ureca{
-            background: orange;
-        }
-        .world{
-            /* width: 200px; */
-            background: pink;
-            /* height: 200px; */
-        }
-
+      .item:nth-child(1) {
+        flex-grow: 0;
+      } /* basis 크기 유지 */
+      .item:nth-child(2) {
+        flex-grow: 2;
+      }
+      .item:nth-child(3) {
+        flex-grow: 1;
+      }
+      div {
+        width: 100px;
+        /* height: 100px; */
+      }
+      .hello {
+        background: green;
+        /* height: 50px; */
+      }
+      .ureca {
+        background: orange;
+      }
+      .world {
+        /* width: 200px; */
+        background: pink;
+        /* height: 200px; */
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!--flex container-->
     <div class="container">
-        <!--flex item-->
-        <div class="item hello">helloflex!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</div>
-        <div class="item ureca">ureka</div>
-        <div class="item world">worldflex</div>
+      <!--flex item-->
+      <div class="item hello">helloflex!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</div>
+      <div class="item ureca">ureka</div>
+      <div class="item world">worldflex</div>
     </div>
-</body>
+  </body>
 </html>

@@ -10,14 +10,14 @@
         display: flex;
         width: 500px;
         background: gray;
-        flex-flow: row nowrap;
+        /* flex-flow: row nowrap; */
         height: 500px;
         /* flex-direction: column; */
-        /* flex-direction: row; */
+        flex-direction: row;
 
         /* 
             정렬 : 
-            justify-content: 메인 축 방향 정렬  
+            justify-content: 메인 축 방향 정렬  => flex-direction이 row이면 메인 축 방향이 row, column이면 메인 축이 column
             align-items : cross 축 방향 정렬
         */
 
@@ -34,21 +34,22 @@
         /* justify-content: space-between; */
 
         /* 아이템들의 “둘레(around) 좌우 or 상하”에 균일한 간격제공
-               (컨테이너크기 - 아이템들의크기)/아이템개수/2
-            */
+              (컨테이너크기 - 아이템들의크기)/아이템개수/2
+        */
         /* justify-content: space-around; */
 
         /* 아이템들의 사이와 양 끝에 균일한 간격을 제공
-               (컨테이너크기 - 아이템들의크기)/(아이템수+1)
-            */
+              (컨테이너크기 - 아이템들의크기)/(아이템수+1)
+        */
         justify-content: space-evenly;
 
         /* 아이템들이 수직축 방향으로 끝까지 쭈욱 늘어납니다. */
-        align-items: stretch;
+        /* align-items: stretch; */
         /* align-items: flex-start; */
         /* align-items: flex-end; */
         /* align-items: center; */
-        /* align-items: baseline; */
+        align-items: baseline;
+        /* baseline은 글자 쓸 때 많이 사용*/
       }
       div {
         width: 100px;
