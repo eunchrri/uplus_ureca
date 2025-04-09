@@ -1,0 +1,52 @@
+@use "../style/base" as base;
+
+.TodoListItem {
+  padding: base.$basic-padding * 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .checkbox {
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    align-items: center;
+
+    svg {
+      font-size: base.$title-font-size - 6;
+    }
+
+    .text {
+      margin-left: base.$basic-padding * 2;
+      font-size: base.$body-font-size;
+      color: base.$secondary-color;
+    }
+
+    &.checked {
+      svg {
+        color: base.$primary-color;
+      }
+
+      .text {
+        color: base.$basic-change-color;
+        text-decoration: line-through;
+      }
+    }
+  }
+
+  .remove {
+    display: flex;
+    align-items: center;
+    font-size: base.$title-font-size - 6;
+    color: base.$basic-button-color;
+    cursor: pointer;
+
+    &:hover {
+      color: red;
+    }
+  }
+
+  & + & {
+    border-top: 1px solid base.$basic-change-color;
+  }
+}

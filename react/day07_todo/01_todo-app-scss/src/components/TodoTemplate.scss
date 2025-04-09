@@ -1,0 +1,24 @@
+@use "../style/base" as base;
+
+.TodoListTemplate {
+  width: 512px;
+  margin: 0 auto;
+  margin-top: 6rem;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.04);
+
+  .app-title {
+    background: base.$primary-color;
+    color: base.$netural-color;
+    height: base.$basic-height * 2;
+    font-size: base.$title-font-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content {
+    background: base.$netural-color;
+  }
+}
