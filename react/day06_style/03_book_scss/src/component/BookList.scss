@@ -1,14 +1,4 @@
-// .book-table {
-//   width: 50%;
-//   border-collapse: collapse;
-//   margin-top: 20px;
-
-//   .book-header {
-//     background-color: #f8f9fa;
-//     font-weight: bold;
-//     text-align: center;
-//   }
-// }
+@use "../styles/base" as base;
 
 .book {
   &-table {
@@ -18,8 +8,10 @@
   }
 
   &-header {
-    background-color: #f8f9fa;
+    background-color: base.$secondary-color;
     font-weight: bold;
     text-align: center;
+    @include base.border;
+    height: 50px;
   }
 }

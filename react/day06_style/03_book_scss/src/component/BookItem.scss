@@ -1,49 +1,52 @@
-.book-row {
-  td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
+@use "../styles/base" as base;
+
+.book {
+  &-row {
+    td {
+      padding: 10px;
+      @include base.border;
+      text-align: center;
+    }
   }
 
-  .book-thumbnail {
+  &-thumbnail {
     width: 50px;
     height: auto;
     border-radius: 4px;
   }
+}
 
-  .select-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+.select-button {
+  background-color: base.$primary-color;
+  color: base.$netural-color;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
 
-    &:hover {
-      background-color: #0056b3;
-    }
+  &:hover {
+    background-color: base.$primary-hover-color;
   }
 }
 
-@media (min-width: 768px) {
-  .book-thumbnail {
-    width: 80px;
-  }
+// @media (min-width: 768px) {
+//   .book-thumbnail {
+//     width: 80px;
+//   }
 
-  .select-button {
-    font-size: 16px;
-    padding: 8px 12px;
-  }
-}
+//   .select-button {
+//     font-size: 16px;
+//     padding: 8px 12px;
+//   }
+// }
 
-@media (min-width: 1024px) {
-  .book-thumbnail {
-    width: 100px;
-  }
+// @media (min-width: 1024px) {
+//   .book-thumbnail {
+//     width: 100px;
+//   }
 
-  .select-button {
-    font-size: 18px;
-    padding: 10px 15px;
-  }
-}
+//   .select-button {
+//     font-size: 18px;
+//     padding: 10px 15px;
+//   }
+// }
