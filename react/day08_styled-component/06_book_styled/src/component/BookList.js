@@ -1,13 +1,30 @@
 import React from "react";
 import styled from "styled-components";
-import BookListItem from "./BookItem";
+import BookItem from "./BookItem";
 
+const Table = styled.table`
+  width: 50%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
+`;
+
+const Thead = styled.thead`
+  background-color: #f8f9fa;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #ddd;
+  height: 50px;
+`;
 
 function BookList({ books, bookSelect }) {
   return (
-    <Table>
+    <Table className="book-table">
       <Thead>
-        <tr>
+        <tr className="book-header">
           <th>이미지</th>
           <th>제목</th>
           <th>가격</th>
@@ -15,11 +32,11 @@ function BookList({ books, bookSelect }) {
           <th>비고</th>
         </tr>
       </Thead>
-      <Tbody>
+      <tbody>
         {books.map((book) => (
-          <BookListItem key={book.ISBN} book={book} bookSelect={bookSelect} />
+          <BookItem key={book.ISBN} book={book} bookSelect={bookSelect} />
         ))}
-      </Tbody>
+      </tbody>
     </Table>
   );
 }
