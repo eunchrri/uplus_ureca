@@ -91,9 +91,16 @@
           describ: document.getElementById("describ").value,
           img: document.getElementById("img").value,
         };
-				
-        const API_BASE_URL = "http://localhost:8080/eureka/book"
-        
+
+        const API_BASE_URL = "http://10.4.2.100:8080/eureka/book";
+        axios
+          .post(API_BASE_URL, bookData)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     </script>
   </body>
