@@ -28,15 +28,16 @@
     <script>
       async function fetchData() {
         const isbn = document.getElementById("isbn").value;
-        const resultEl = document.getElementById("result");
-        const API_BASE_URL = "http://localhost:8080/eureka/book";
-        
+        const resultE1 = document.getElementById("result");
+        const API_BASE_URL = "http://10.4.2.100:8080/eureka/book";
+
         try {
-        
-        	
+          const response = await axios.get(`${API_BASE_URL}/${isbn}`);
+          console.log(response.data);
+          resultE1.textContent = JSON.stringify(response.data, null, 2);
         } catch (error) {
           console.error("에러 발생:", error);
-          resultEl.textContent = "오류 발생: " + error;
+          resultE1.textContent = "오류 발생: " + error;
         }
       }
     </script>
