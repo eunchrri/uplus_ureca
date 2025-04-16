@@ -3,8 +3,8 @@ import styles from "@/app/books/book.module.scss";
 import SelectBox from "@/components/common/SelectBox";
 import Link from "next/link";
 import BookItem from "@/components/books/BookItem";
-import React, { useEffect, useRef, useState } from "react";
-import { localAxios } from "@/util/http-commons";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { localAxios } from "@/utils/http-commons";
 import { Book, BookSearchParams } from "@/types/book";
 // metadata는 server component
 // export const metadata = {
@@ -13,20 +13,15 @@ import { Book, BookSearchParams } from "@/types/book";
 export default function Books() {
   ////////////////////////todo1. 비동기 통신을 통해 전달 받을 데이타를 위한 상태 선언하기
   /// books, loading, error
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<String | null>(null);
+  const wordRef = useRef<HTMLInputElement>(null);
 
   ////////////////////////todo5. 검색을 위한 상태 선언하기
+  const [selectedKey, setSelectedKey] = useState<string>("all");
 
   ////////////////////////todo6. input(검색어)을 위한 ref 선언하기
-  const books = [
-    {
-      isbn: "9917-1",
-      title: "처음하는 리액트",
-      author: "ureca",
-      price: 30000,
-      describ: "",
-      img: "domain.jpg",
-    },
-  ];
 
   const options = [
     { value: "all", text: "---선택하세요---" },
@@ -35,20 +30,60 @@ export default function Books() {
   ];
 
   ////////////////////////todo2. axios를 이용해 book 목록을 가져올 함수 선언하기
+  const axios = localAxios();
+  // useCallback 앞에 async 붙일 수 없고 함수 앞에 async 붙여야 함.
+  const searchAllBooks = useCallback(async (params: BookSearchParams = {}) => {
+    try {
+      const response = await axios.get("/book", { params });
+      console.log(response.data);
+      setBooks(response.data.books);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("오류 발생!!!!!!!");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   ////////////////////////todo3. useEffect로 비동기 통신 함수 호출하기
+  useEffect(() => {
+    searchAllBooks();
+  }, []);
 
   ////////////////////////todo7. SelectBox를 위한 함수 선언하기
-
-  ////////////////////////todo4. loading, error에 대한 화면
+  const handleSelect = useCallback(
+    (key: string) => {
+      setSelectedKey((prev) => key);
+    },
+    [selectedKey]
+  );
 
   ////////////////////////todo9. 검색 버튼을 위한 이벤트 처리 함수 만들기
+  const handleSearch = useCallback(() => {
+    const word = wordRef.current?.value.trim() || "";
+    if (!word) {
+      wordRef.current?.focus();
+      alert("검색어를 입력해 주세요.");
+      return;
+    }
+    console.log("books.... 검색    key: ", selectedKey, " word: ", word);
+    searchAllBooks({ key: selectedKey, word, pageNo: 1 });
+  }, [selectedKey]);
+
+  ////////////////////////todo4. loading, error에 대한 화면
+  if (loading) return <h1>Loading...</h1>;
+  if (error) return <h1>오류 발생: {error}</h1>;
+
   return (
     <div className={styles.bookList}>
       <div className={styles.header}>
         <div className={styles.searchArea}>
           {/* todo8. SelectBox 사용하기  */}
-
+          <SelectBox selectOptions={options} onKeySelect={handleSelect} />
           <input
             type="text"
             ref={wordRef}
@@ -56,7 +91,9 @@ export default function Books() {
             className={styles.searchInput}
           />
           {/* todo10. 버튼에 이벤트 달기 */}
-          <button className={styles.searchButton}>검색</button>
+          <button className={styles.searchButton} onClick={handleSearch}>
+            검색
+          </button>
         </div>
       </div>
       <table className={styles.table}>
