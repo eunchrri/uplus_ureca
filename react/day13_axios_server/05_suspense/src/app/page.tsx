@@ -1,9 +1,8 @@
 import styles from "@/app/page.module.scss";
+import BookFetch from "@/components/books/BookFetch";
+import BookFetchAll from "@/components/books/BookFetchAll";
 import ClientComponent from "@/components/books/ClientComponent";
-import SelectBox from "@/components/common/SelectBox";
-import { Book } from "@/types/book";
-import { localAxios } from "@/utils/http-commons";
-// import { useState } from "react";
+import { Suspense } from "react";
 
 /*
   SSR로 axios 통신 하기
@@ -14,53 +13,19 @@ import { localAxios } from "@/utils/http-commons";
  */
 
 export default async function Home() {
-  const axios = localAxios();
-  // Home을 async로 선언했기 때문에 ServerComponent이므로 useXXXX 사용하면 에러 발생
-  // const [data] = useState<string>("hello");
-  const getBooks = async () => {
-    console.log("fetch getBooks......", Date.now());
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    const response = await axios.get("/book");
-    // SSR이므로 console.log는 브라우저에 출력되지 않고 terminal에 출력된다.
-    console.log(response.data);
-    return response.data.books;
-  };
-
-  const getBook = async () => {
-    console.log("fetch getBook......", Date.now());
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    const response = await axios.get("/book/2025-04-15");
-    // SSR이므로 console.log는 브라우저에 출력되지 않고 terminal에 출력된다.
-    console.log(response.data);
-    return response.data;
-  };
-
-  // await getBook();
-
-  const options = [
-    { value: "all", text: "---선택하세요---" },
-    { value: "title", text: "제목" },
-    { value: "author", text: "작성자" },
-  ];
-
-  const handleSelect = (key: string) => {
-    console.log("key......", key);
-  };
-
-  // const books: Book[] = await getBooks();
-  // const book: Book = await getBook();
-
-  const [books, book] = await Promise.all([getBooks(), getBook()]);
-
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Home</h1>
-      <h1 className={styles.title}>{JSON.stringify(books)}</h1>
-      <h1 className={styles.title}>{JSON.stringify(book)}</h1>
-      {/* server component에서는 자식 컴포넌트에 속성으로 함수를 전달할 수 없다. */}
-      {/* <h1 className={styles.title}>
-        <SelectBox selectOptions={options} onKeySelect={handleSelect} />
-      </h1> */}
+      <h1 className={styles.title}>
+        <Suspense fallback={<h1>Loading Book List</h1>}>
+          <BookFetchAll />
+        </Suspense>
+      </h1>
+      <h1 className={styles.title}>
+        <Suspense fallback={<h1>Loading Book Detail</h1>}>
+          <BookFetch />
+        </Suspense>
+      </h1>
       <h1 className={styles.title}>
         {/* client component를 import 해서 사용하는 것은 가능하다! */}
         <ClientComponent />
