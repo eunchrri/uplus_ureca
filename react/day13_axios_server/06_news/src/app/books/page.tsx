@@ -4,7 +4,6 @@ import SelectBox from "@/components/common/SelectBox";
 import Link from "next/link";
 import BookItem from "@/components/books/BookItem";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { localAxios } from "@/utils/http-commons";
 import { Book, BookSearchParams } from "@/types/book";
 import { handleApi } from "@/utils/handleApi";
 import { searchAllBooks } from "@/service/books";
