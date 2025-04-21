@@ -23,7 +23,15 @@ export default function Navbar() {
         </li>
       </ul>
       <div className={styles.search}>
-        <button>로그인</button>
+        <Link href="/member/regist">
+          <button>회원가입</button>
+        </Link>
+        <Link href="/member/login">
+          <button>로그인</button>
+        </Link>
+        <Link href="/member">
+          <button>회원정보</button>
+        </Link>
       </div>
     </nav>
   );

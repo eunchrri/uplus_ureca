@@ -6,6 +6,7 @@ import { handleApi } from "@/utils/handleApi";
 import { searchAllBooks, searchBook, updateBook, deleteBook } from "@/service/books";
 import { useRouter } from "next/navigation";
 import { Book } from "@/types/book";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function BookDetail({ params: { isbn } }: { params: { isbn: string } }) {
   const router = useRouter();
@@ -16,31 +17,55 @@ export default function BookDetail({ params: { isbn } }: { params: { isbn: strin
   const priceRef = useRef<HTMLInputElement>(null);
   const describRef = useRef<HTMLTextAreaElement>(null);
 
-  //////////////////////todo1. loading, error에 대한 상태 선언하기
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  //////////////////////todo1. useQuery에서 처리하므로 주석 처리
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [error, setError] = useState<string | null>(null);
 
-  //////////////////////todo3. useEffect로 비동기 통신 함수 호출하기
-  // useEffect hook에는 async를 설정할 수 없기 때문에
-  // useEffect 내부에 async 함수를 작성하고 호출한다.
+  //////////////////////todo2. useQuery 선언하기
+  const {
+    data: book,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["book", isbn],
+    queryFn: () => searchBook(isbn),
+  });
 
   useEffect(() => {
-    const loadBook = async () => {
-      setLoading(true);
-      const { data, error } = await handleApi(() => searchBook(isbn));
-      console.log(data);
-      if (error) {
-        setError(error);
-      } else if (data) {
-        if (titleRef.current) titleRef.current.value = data.title;
-        if (authorRef.current) authorRef.current.value = data.author;
-        if (priceRef.current) priceRef.current.value = data.price.toString();
-        if (describRef.current) describRef.current.value = data.describ;
-      }
-      setLoading(false);
-    };
-    loadBook();
-  }, [isbn]);
+    if (book) {
+      if (titleRef.current) titleRef.current.value = book.title;
+      if (authorRef.current) authorRef.current.value = book.author;
+      if (priceRef.current) priceRef.current.value = book.price.toString();
+      if (describRef.current) describRef.current.value = book.describ;
+    }
+  }, [book]);
+
+  //////////////////////todo4. queryClient 생성하기
+  const queryClient = useQueryClient(); // 수정, 삭제 후 갱신 요청을 위해서 queryClient 생성
+
+  //////////////////////todo5. useMutation을 사용하여 수정, 삭제 처리하기
+  const updateMutation = useMutation({
+    mutationFn: (uBook: Book) => updateBook(uBook),
+    onSuccess: (data) => {
+      alert("수정되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["book", isbn] }); // 수정 후 해당 도서 정보 갱신 요청
+    },
+    onError: (error) => {
+      alert("수정 실패");
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteBook,
+    onSuccess: (data) => {
+      alert("삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["books"] }); // 삭제 후 리스트 갱신
+      router.push("/books"); // 삭제 후 도서 목록으로 이동
+    },
+    onError: (error) => {
+      alert("삭제 실패");
+    },
+  });
 
   // 수정
   const handleUpdate = useCallback(async () => {
@@ -73,15 +98,10 @@ export default function BookDetail({ params: { isbn } }: { params: { isbn: strin
       };
 
       console.log("수정한 내용: ", book);
-      const { data, error } = await handleApi(() => updateBook(book));
-      if (error) {
-        setError(error);
-      } else if (data) {
-        alert("도서 정보가 수정되었습니다.");
-      }
+      updateMutation.mutate(book); // 수정 요청
     }
     setIsEditMode(!isEditMode);
-  }, [isEditMode]);
+  }, [isEditMode, isbn]);
 
   // 삭제
   const handleRemove = useCallback(async () => {
@@ -90,20 +110,14 @@ export default function BookDetail({ params: { isbn } }: { params: { isbn: strin
     const confirmDelete = window.confirm("정말 이 도서를 삭제하시겠습니까?");
     if (!confirmDelete) return;
 
-    const { data, error } = await handleApi(() => deleteBook(isbn));
-    if (data) {
-      alert("도서가 삭제되었습니다.");
-      router.push("/books");
-    } else if (error) {
-      setError(error);
-    }
+    deleteMutation.mutate(isbn); // 삭제 요청
     console.log("도서 목록으로 이동");
     // 목록 이동 로직
   }, [isbn]);
 
   //////////////////////todo4. loading, error에 대한 화면
-  if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>error...</h1>;
+  if (isLoading) return <h1>Loading...</h1>;
+  if (error) return <h1>{(error as Error).message}</h1>;
 
   return (
     <div className={styles.container}>

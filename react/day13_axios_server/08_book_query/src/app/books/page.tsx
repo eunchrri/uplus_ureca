@@ -8,46 +8,35 @@ import { localAxios } from "@/utils/http-commons";
 import { Book, BookSearchParams } from "@/types/book";
 import { handleApi } from "@/utils/handleApi";
 import { searchAllBooks } from "@/service/books";
+import { useQuery } from "@tanstack/react-query";
 // metadata는 server component
 // export const metadata = {
 //   title: "Book List",
 // };
 export default function Books() {
-  ////////////////////////todo1. 비동기 통신을 통해 전달 받을 데이타를 위한 상태 선언하기
-  /// books, loading, error
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const wordRef = useRef<HTMLInputElement>(null);
-
   ////////////////////////todo5. 검색을 위한 상태 선언하기
   const [selectedKey, setSelectedKey] = useState<string>("all");
 
   ////////////////////////todo6. input(검색어)을 위한 ref 선언하기
+  const wordRef = useRef<HTMLInputElement>(null);
 
   const options = [
     { value: "all", text: "---선택하세요---" },
     { value: "title", text: "제목" },
     { value: "author", text: "작성자" },
   ];
+  ////////////////////////todo1. useQeury를 다시 수행시키기 위한 상태 값 선언
+  const [queryKeyState, setQueryKeyState] = useState({ key: "all", word: "" });
 
-  ////////////////////////todo2. axios를 이용해 book 목록을 가져올 함수 선언하기
-  // useCallback 앞에 async 붙일 수 없고 함수 앞에 async 붙여야 함.
-  const loadBooks = useCallback(async (params: BookSearchParams = {}) => {
-    setLoading(true);
-    const { data, error } = await handleApi(() => searchAllBooks(params));
-    if (error) {
-      setError(error);
-    } else if (data) {
-      setBooks(data);
-    }
-    setLoading(false);
-  }, []);
-
-  ////////////////////////todo3. useEffect로 비동기 통신 함수 호출하기
-  useEffect(() => {
-    loadBooks();
-  }, []);
+  ////////////////////////todo2. useQuery 선언하기
+  const {
+    data: books = [],
+    isLoading,
+    error,
+  } = useQuery<Book[]>({
+    queryKey: ["books", queryKeyState],
+    queryFn: () => searchAllBooks({ key: queryKeyState.key, word: queryKeyState.word, pageNo: 1 }),
+  });
 
   ////////////////////////todo7. SelectBox를 위한 함수 선언하기
   const handleSelect = useCallback(
@@ -58,21 +47,16 @@ export default function Books() {
     [selectedKey]
   );
 
-  ////////////////////////todo9. 검색 버튼을 위한 이벤트 처리 함수 만들기
+  ////////////////////////todo3. 검색 버튼을 위한 이벤트 처리 함수 만들기
   const handleSearch = useCallback(() => {
     const word = wordRef.current?.value.trim() || "";
-    if (!word) {
-      wordRef.current?.focus();
-      alert("검색어를 입력해 주세요.");
-      return;
-    }
     console.log("books.... 검색    key: ", selectedKey, " word: ", word);
-    loadBooks({ key: selectedKey, word, pageNo: 1 });
+    setQueryKeyState({ key: selectedKey, word });
   }, [selectedKey]);
 
   ////////////////////////todo4. loading, error에 대한 화면
-  if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>오류 발생: {error}</h1>;
+  if (isLoading) return <h1>Loading...</h1>;
+  if (error) return <h1>오류 발생: {(error as Error).message}</h1>;
 
   return (
     <div className={styles.bookList}>

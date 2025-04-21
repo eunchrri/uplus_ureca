@@ -28,3 +28,10 @@ export const deleteBook = async (isbn: string): Promise<void> => {
   const { data } = await axios.delete(`book/${isbn}`);
   return data;
 };
+
+// 도서 등록
+export const insertBook = async (book: Book): Promise<Book> => {
+  const axios = localAxios();
+  const { data } = await axios.post("/book", book);
+  return data;
+};

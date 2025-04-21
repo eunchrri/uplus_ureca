@@ -3,6 +3,8 @@ import React, { useCallback, useRef } from "react";
 import styles from "./regist.module.scss";
 import { useRouter } from "next/navigation";
 import { Book } from "@/types/book";
+import { useMutation } from "@tanstack/react-query";
+import { insertBook } from "@/service/books";
 
 const BookRegist = () => {
   const isbnRef = useRef<HTMLInputElement>(null);
@@ -11,6 +13,21 @@ const BookRegist = () => {
   const priceRef = useRef<HTMLInputElement>(null);
   const describRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
+
+  //todo1. useMutation에서 관리하므로 errorState는 삭제
+  // const [errorState, setErrorState] = useState<string>("");
+
+  //todo2. useMutation 작성
+  const { mutate } = useMutation({
+    mutationFn: insertBook,
+    onSuccess: (data) => {
+      alert(data);
+      router.push("/books");
+    },
+    onError: (error) => {
+      alert("등록 실패");
+    },
+  });
 
   const handleRegist = useCallback(() => {
     const isbn = isbnRef.current?.value.trim() || "";
@@ -39,10 +56,10 @@ const BookRegist = () => {
       describ: describRef.current?.value || "",
       img: "",
     };
-    //비동기 통신
-    console.log("book regist...", updateBook);
-    router.push("/books");
-  }, []);
+    //todo3. mutate를 사용하여 등록하기
+    mutate(updateBook);
+  }, [mutate]);
+
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>도서 등록</h2>
