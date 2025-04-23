@@ -1,13 +1,9 @@
 "use client";
 
-import { useAppSelector } from "@/store/hooks";
+import { useColorHooks } from "@/store/colorhooks";
 
 const ColorBox = () => {
-  /////////TODO8. useAppSelector를 통해 color 전달 받기
-  const color = useAppSelector((state) => state.color.color);
-
-  /////////TODO9. useAppSelector를 통해 subcolor 전달 받기
-  const subColor = useAppSelector((state) => state.color.subColor);
+  const { color, subColor } = useColorHooks();
 
   return (
     <div>

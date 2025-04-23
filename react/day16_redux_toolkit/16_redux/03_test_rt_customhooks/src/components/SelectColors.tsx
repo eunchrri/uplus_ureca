@@ -1,23 +1,22 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAppDispatch } from "@/store/hooks";
-import { changeColor, changeSubColor } from "@/store/colorSlice";
+import { useColorHooks } from "@/store/colorhooks";
 
 const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
 
 const SelectColors = () => {
   ////////////TODO 10.  useAppDispatch()를 통해 dispatch
-  const dispatch = useAppDispatch();
+  const { changeColor, changeSubColor } = useColorHooks();
 
   ////////////TODO 11. dispatch함수로 changeColor action 수행하기
   const handleSetColor = useCallback((color: string) => {
-    dispatch(changeColor(color));
+    changeColor(color);
   }, []);
 
   ////////////TODO 12. dispatch함수로 changeSubColor action 수행하기
   const handleSetSubColor = useCallback((subcolor: string) => {
-    dispatch(changeSubColor(subcolor));
+    changeSubColor(subcolor);
   }, []);
   return (
     <div>
