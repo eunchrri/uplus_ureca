@@ -1,10 +1,11 @@
 "use client";
 import { Book } from "@/types/book";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 /////todo1. 제공할 상태와 상태를 변경할 함수에 대한 타입 설정하기
 interface BookMarkContextType {
   bookMark: Book[]; // 북마크를 저장할 배열
+  loaded: boolean; // 북마크가 로드되었는지 여부
   addBookMark: (book: Book) => void; // 북마크 추가 함수
   removeBookMark: (isbn: string) => void; // 북마크 삭제 함수
   removeAllBookMark: () => void; // 모든 북마크 삭제 함수
@@ -17,6 +18,30 @@ const BookMarkContext = createContext<BookMarkContextType | null>(null);
 /////type에서 선언한 상태와 함수를 value에 필수로 작성하기
 export const BookMarkProvider = ({ children }: { children: ReactNode }) => {
   const [bookMark, setBookMark] = useState<Book[]>([]); // 북마크 상태
+  const [loaded, setLoaded] = useState(false); // 북마크가 로드되었는지 여부
+
+  // storage에 저장된 데이터가 있으면 loaded를 true로 설정 => useEffect로 처리 & 처음 한번만 load [] 대괄호 비워두면 한번만 load, 대괄호 없으면 매번 load
+  useEffect(() => {
+    const store = localStorage.getItem("bookmark"); // localStorage에서 key가 bookmark인 데이터 가져오기
+    console.log(store);
+    if (store) {
+      try {
+        setBookMark(JSON.parse(store)); // JSON.parse로 문자열을 객체로 변환하여 setBookMark에 저장
+      } catch (error) {
+        setBookMark([]); // JSON.parse가 실패하면 빈 배열로 초기화
+      }
+    }
+    setLoaded(true); // 북마크가 로드되었음을 true로 설정
+  }, []);
+
+  // bookMark 상태가 변경될 때마다 localStorage에 저장 => useEffect로 처리
+  useEffect(() => {
+    console.log("useEffect ......... loaded", loaded);
+    console.log("useEffect ......... bookMark", bookMark);
+    if (loaded) {
+      localStorage.setItem("bookmark", JSON.stringify(bookMark)); // bookMark 상태를 JSON.stringify로 문자열로 변환하여 localStorage에 저장
+    }
+  }, [bookMark, loaded]);
 
   const addBookMark = (book: Book) => {
     setBookMark((prev) =>
@@ -41,11 +66,12 @@ export const BookMarkProvider = ({ children }: { children: ReactNode }) => {
     setBookMark([]);
   };
 
-  return (
-    <BookMarkContext.Provider value={{ bookMark, addBookMark, removeBookMark, removeAllBookMark }}>
-      {children}
-    </BookMarkContext.Provider>
+  const returnValue = useMemo(
+    () => ({ bookMark, loaded, addBookMark, removeBookMark, removeAllBookMark }),
+    [bookMark, loaded]
   );
+
+  return <BookMarkContext.Provider value={returnValue}>{children}</BookMarkContext.Provider>;
 };
 
 /////todo4 커스텀 훅: useMemberContext

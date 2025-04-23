@@ -20,7 +20,7 @@ const BookMarkItem = ({ book }: BookMarkItemProps) => {
       </td>
       <td>{book.isbn}</td>
       <td>
-        <Link href={`/book/${book.isbn}`}>{book.title}</Link>
+        <Link href={`/books/${book.isbn}`}>{book.title}</Link>
       </td>
       <td>{book.author}</td>
       <td>{book.price}</td>
@@ -32,3 +32,5 @@ const BookMarkItem = ({ book }: BookMarkItemProps) => {
     </tr>
   );
 };
+
+export default BookMarkItem;

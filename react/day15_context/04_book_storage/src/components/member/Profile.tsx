@@ -6,7 +6,7 @@ import { useCallback } from "react";
 
 export default function Profile() {
   ///////todo1. store/member에서  member, logout, login 추출하기
-  const { member, login, logout } = useMemberContext();
+  const { member, loaded, login, logout } = useMemberContext();
 
   const dummyUser = {
     id: "ureca",
@@ -24,9 +24,24 @@ export default function Profile() {
     router.push("/"); // home으로 이동동
   }, []);
 
+  if (!loaded) {
+    return (
+      <div>
+        <span>로딩 중...</span>
+      </div>
+    );
+  }
+
   ////////todo2. member가 없는 경우 로그인 버튼 표시하기
   if (!member) {
-    return <button onClick={() => login(dummyUser)}>로그인</button>;
+    return (
+      <div>
+        <button onClick={() => login(dummyUser)}>로그인</button>
+        <Link href="/member/regist">
+          <button>회원가입</button>
+        </Link>
+      </div>
+    );
   }
 
   return (
