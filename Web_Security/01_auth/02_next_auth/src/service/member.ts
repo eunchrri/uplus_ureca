@@ -10,11 +10,19 @@ export const updateMember = async (member: Member): Promise<ResMember> => {
   const { data } = await axios.put("/member", member);
   return data;
 };
+
 export const registMember = async (member: Member): Promise<ResMember> => {
   const { data } = await axios.post("/member", member);
   return data;
 };
+
 export const removeMember = async (id: string): Promise<ResMember> => {
   const { data } = await axios.delete(`/member/${id}`);
+  return data;
+};
+
+export const logoutMember = async (id: string) => {
+  console.log("service>member>logoutMember......id:", id);
+  const { data } = await axios.get(`/member/logout/${id}`);
   return data;
 };
