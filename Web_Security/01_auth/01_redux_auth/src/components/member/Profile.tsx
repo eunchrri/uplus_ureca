@@ -1,22 +1,34 @@
 "use client";
 
+import { logoutMember } from "@/service/member";
 import { useAuth } from "@/store/hooks/memberHook";
+import { handleApi } from "@/utils/handleApi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 export default function Profile() {
   const { memberState, logout } = useAuth();
   const router = useRouter();
 
   //////////TODO M7. 로그인 버튼을 위한 이벤트 처리
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     router.push("/member/login");
-  };
+  }, []);
 
-  const handleLogout = () => {
-    logout();
-    router.push("/books");
-  };
+  const handleLogout = useCallback(async () => {
+    if (memberState) {
+      const id = memberState.id;
+      console.log("logout..... id:", id);
+      const { data, error } = await handleApi(() => logoutMember(id));
+      if (data) {
+        logout();
+        router.push("/books");
+      } else {
+        alert(error);
+      }
+    }
+  }, [memberState, logout]);
 
   if (!memberState?.isLoggedIn)
     return (

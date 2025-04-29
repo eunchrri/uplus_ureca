@@ -18,6 +18,8 @@ let localRefreshToken = "";
 
 api.interceptors.request.use(async (config) => {
   if (!localAccessToken) {
+    //axios는 화면이 아니기 때문에 useAuth() 같은 store을 직접 호출해서 사용할 수없다.
+    //
     const state = store.getState(); // 현재 Redux store 상태 가져오기
     localAccessToken = state.member.memberState?.accessToken; // 토큰 꺼내기
     localRefreshToken = state.member.memberState?.refreshToken;
@@ -47,6 +49,8 @@ api.interceptors.response.use(
         updateAccessToken(accessToken); // store 업데이트
         console.log("새로 발급 받은 token:", accessToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        
+        localAccessToken = accessToken;
         return api(originalRequest); // 요청 다시 보내기
       } catch (refreshError) {
         console.error("Token refresh 실패", refreshError);
@@ -55,7 +59,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

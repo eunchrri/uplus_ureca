@@ -1,7 +1,7 @@
 "use client";
 import { Member } from "@/types/member";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { login, logout } from "@/store/slices/memberSlice";
+import { login, logout, setAccessToken } from "@/store/slices/memberSlice";
 import { useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { loginMember } from "@/service/member";
@@ -32,9 +32,9 @@ export const useAuth = () => {
   );
 
   //////////TODO M5. setAccessToken  함수를 수행시킬 함수 정의 하기
-
+  const setToken = useCallback((token: string) => dispatch(setAccessToken(token)), [dispatch]);
   const signOut = useCallback(() => dispatch(logout()), [dispatch]);
 
   //////////TODO M6. setAccessToken  함수를 수행시킬 함수 내보내기
-  return { memberState, loginMutation, login: signIn, logout: signOut };
+  return { memberState, loginMutation, login: signIn, logout: signOut, setToken };
 };
